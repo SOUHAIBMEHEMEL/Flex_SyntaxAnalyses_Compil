@@ -1,0 +1,43 @@
+%option noyywrap
+%{
+  
+#include <stdlib.h>
+#include <stdio.h>
+char debut_ligne='u';
+ 
+%}
+ 
+%start INIT E1 E2 E3 E4
+ 
+%%
+
+ 
+^E {debut_ligne='E';fprintf(yyout, "%s",yytext); BEGIN E1;}
+^U {debut_ligne='U';fprintf(yyout, "%s",yytext); BEGIN E2;}
+^L {debut_ligne='L';fprintf(yyout, "%s",yytext); BEGIN E3;}
+
+<E1>1CS { fprintf(yyout, "2CSSIQ");}
+<E2>1CS { fprintf(yyout, "2CSSIL");}
+<E3>1CS { fprintf(yyout, "2CSSIT");}
+<E4>. { fprintf(yyout, "%s",yytext);}
+
+
+ 
+%%
+ 
+
+ 
+int main()
+{
+  int d;
+  FILE *input = fopen("input_exo7.txt", "r");
+  FILE *output = fopen("output_exo7.txt", "w");
+  yyout = output;
+  
+		if(input)
+		yyin = input;
+		
+  yylex();
+  scanf("%d",&d);
+  return 1;
+}

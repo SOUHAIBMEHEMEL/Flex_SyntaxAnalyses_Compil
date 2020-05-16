@@ -1,0 +1,52 @@
+%option noyywrap
+%{
+  
+#include <stdlib.h>
+#include <stdio.h>
+char debut_ligne='u';
+ 
+%}
+ 
+
+ 
+%%
+
+ 
+^E {debut_ligne='E';fprintf(yyout, "%s",yytext);}
+^U {debut_ligne='U';fprintf(yyout, "%s",yytext);}
+^L {debut_ligne='L';fprintf(yyout, "%s",yytext);}
+
+main|if|else|while|do|switch|of| {
+   if(debut_ligne=='E'){fprintf(yyout, "2CSSIQ");}
+   else{
+        if(debut_ligne=='U'){fprintf(yyout, "2CSSIL");}
+	else{
+	     if(debut_ligne=='L'){fprintf(yyout, "2CSSIT");}
+	     else{fprintf(yyout, "%s",yytext);} 
+	      }
+	}
+        
+   }
+   
+
+
+
+ 
+%%
+ 
+
+ 
+int main()
+{
+  int d;
+  FILE *input = fopen("input_exo8.txt", "r");
+  FILE *output = fopen("output_exo8.txt", "w");
+  yyout = output;
+  
+		if(input)
+		yyin = input;
+		
+  yylex();
+  scanf("%d",&d);
+  return 1;
+}
